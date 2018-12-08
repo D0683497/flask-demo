@@ -16,38 +16,43 @@
     <div class="form-label-group">
         {{ form.Email() }}
         {{ form.Email.label }}
-        <!--
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputEmail">Email address</label>
-        -->
     </div>
+    {% for error in form.Email.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
 
     <div class="form-label-group">
         {{ form.Username() }}
         {{ form.Username.label }}
-        <!--
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required>
-        <label for="inputUsername">Username</label>
-        -->
     </div>
+    {% for error in form.Username.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
 
     <div class="form-label-group">
         {{ form.Password() }}
         {{ form.Password.label }}
-        <!--
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <label for="inputPassword">Password</label>
-        -->
     </div>
+    {% for error in form.Password.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
 
     <div class="form-label-group">
         {{ form.ConfirmPassword() }}
         {{ form.ConfirmPassword.label }}
-        <!--
-        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
-        <label for="confirmPassword">Password</label>
-        -->
     </div>
+    {% for error in form.ConfirmPassword.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
+
     {{ form.regist() }}
     <p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
 </form>

@@ -7,7 +7,7 @@
 
 {% block content %}
 <form class="form-login" method="POST">
-    {{  form.hidden_tag() }}
+    {{ form.hidden_tag() }}
     <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>
     </div>
@@ -15,22 +15,24 @@
     <div class="form-label-group">
         {{ form.Username() }}
         {{ form.Username.label }}
-        <!--
-        <input type="text" id="inputUsername" name="Username" class="form-control" placeholder="Username" required autofocus>
-        <label for="inputUsername">Username</label>
-        -->
     </div>
+    {% for error in form.Username.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
 
     </div>
 
     <div class="form-label-group">
         {{ form.Password() }}
         {{ form.Password.label }}
-        <!--
-        <input type="password" id="inputPassword" name="Password" class="form-control" placeholder="Password" required>
-        <label for="inputPassword">Password</label>
-        -->
     </div>
+    {% for error in form.Password.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
 
     <div class="mb-3 d-flex justify-content-between">
         <div class="checkbox">

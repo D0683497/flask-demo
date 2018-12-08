@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, redirect, flash
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
@@ -42,7 +42,9 @@ class RegistForm(FlaskForm):
         validators=[InputRequired(message='不能為空!'), EqualTo('ConfirmPassword', message='您輸入的密碼不相同!')],
         render_kw={'class':'form-control', 'placeholder':'Password'}
     )
-    ConfirmPassword = PasswordField('Confirm Password',
+    ConfirmPassword = PasswordField(
+        'Confirm Password',
+        validators=[InputRequired(message='不能為空!')],
         render_kw={'class':'form-control', 'placeholder':'Confirm Password'}
     )
     regist = SubmitField(
@@ -71,7 +73,6 @@ def login():
     if form.validate_on_submit():
         Username = form.Username.data
         Password = form.Password.data
-        print(Username, Password)
         return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
@@ -83,7 +84,6 @@ def regist():
         Email = form.Email.data
         Username = form.Username.data
         Password = form.Password.data
-        print(Username, Password, Email)
         return redirect(url_for('index'))
     return render_template('regist.html', form=form)
 
