@@ -1,8 +1,8 @@
 from flask import Flask, render_template, url_for, request, redirect
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import InputRequired, Email, EqualTo
 
 
 app = Flask(__name__)
@@ -11,16 +11,42 @@ app.config['SECRET_KEY'] = 'hard to guess string'
 class LoginForm(FlaskForm):
     Username = StringField(
         'Username', 
-        validators=[DataRequired(message='不能為空!')],
+        validators=[InputRequired(message='不能為空!')],
         render_kw={'class':'form-control', 'placeholder':'Username'}
     )
     Password = PasswordField(
         'Password',
-        validators=[DataRequired(message='不能為空!')],
+        validators=[InputRequired(message='不能為空!')],
         render_kw={'class':'form-control', 'placeholder':'Password'}
+    )
+    rememberme = BooleanField(
+        'Remember me'
     )
     login = SubmitField(
         '登入',
+        render_kw={'class':'btn btn-lg btn-primary btn-block'}
+    )
+
+class RegistForm(FlaskForm):
+    Email = StringField('Email address',
+        validators=[InputRequired(message='不能為空!') ,Email(message='格式錯誤!')],
+        render_kw={'class':'form-control', 'placeholder':'Email address'}
+    )
+    Username = StringField(
+        'Username', 
+        validators=[InputRequired(message='不能為空!')],
+        render_kw={'class':'form-control', 'placeholder':'Username'}
+    )
+    Password = PasswordField(
+        'Password',
+        validators=[InputRequired(message='不能為空!'), EqualTo('ConfirmPassword', message='您輸入的密碼不相同!')],
+        render_kw={'class':'form-control', 'placeholder':'Password'}
+    )
+    ConfirmPassword = PasswordField('Confirm Password',
+        render_kw={'class':'form-control', 'placeholder':'Confirm Password'}
+    )
+    regist = SubmitField(
+        '註冊',
         render_kw={'class':'btn btn-lg btn-primary btn-block'}
     )
 
@@ -50,9 +76,16 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route("/regist/")
+@app.route("/regist/", methods=['GET', 'POST'])
 def regist():
-    return render_template('regist.html')
+    form = RegistForm()
+    if form.validate_on_submit():
+        Email = form.Email.data
+        Username = form.Username.data
+        Password = form.Password.data
+        print(Username, Password, Email)
+        return redirect(url_for('index'))
+    return render_template('regist.html', form=form)
 
 
 if __name__ == '__main__':
