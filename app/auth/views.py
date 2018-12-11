@@ -1,9 +1,9 @@
 from flask import render_template, redirect, request, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from ..models import User
 from .. import db
-from .forms import LoginForm, RegistForm
+from .forms import LoginForm, RegistForm, ChangePasswordForm
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -29,13 +29,31 @@ def logout():
     flash('成功登出', 'warning')
     return redirect(url_for('main.index'))
 
+
 @auth.route('/regist', methods=['GET', 'POST'])
 def regist():
     form = RegistForm()
     if form.validate_on_submit():
-        user = User(email=form.Email.data, username=form.Username.data, password=form.Password.data)
+        user = User(email=form.Email.data,
+                    username=form.Username.data, password=form.Password.data)
         db.session.add(user)
         db.session.commit()
         flash('註冊成功!', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/regist.html', form=form)
+
+@auth.route('/change-password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.old_password.data):
+            current_user.password = form.password.data
+            db.session.add(current_user)
+            db.session.commit()
+            logout_user()
+            flash('密碼更改成功，請重新登入', 'success')
+            return redirect(url_for('main.index'))
+        else:
+            flash('密碼輸入錯誤', 'error')
+    return render_template("auth/change_password.html", form=form)

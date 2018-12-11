@@ -4,10 +4,11 @@ from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms import ValidationError
 from ..models import User
 
+
 class LoginForm(FlaskForm):
     Username = StringField(
         'Username',
-        validators=[DataRequired(message='不能為空!'),],
+        validators=[DataRequired(message='不能為空!'), ],
         render_kw={'class': 'form-control', 'placeholder': 'Username'}
     )
     Password = PasswordField(
@@ -28,7 +29,7 @@ class RegistForm(FlaskForm):
     def validata_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email已被註冊')
-    
+
     def validata_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('使用者已被註冊')
@@ -45,8 +46,8 @@ class RegistForm(FlaskForm):
     )
     Password = PasswordField(
         'Password',
-        validators=[DataRequired(message='不能為空!'), EqualTo(
-            'ConfirmPassword', message='您輸入的密碼不相同!')],
+        validators=[DataRequired(message='不能為空!'), 
+                    EqualTo('ConfirmPassword', message='您輸入的密碼不相同!')],
         render_kw={'class': 'form-control', 'placeholder': 'Password'}
     )
     ConfirmPassword = PasswordField(
@@ -56,5 +57,28 @@ class RegistForm(FlaskForm):
     )
     regist = SubmitField(
         '註冊',
+        render_kw={'class': 'btn btn-lg btn-primary btn-block'}
+    )
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField(
+        '目前的密碼', 
+        validators=[DataRequired(message='不能為空!')], 
+        render_kw={'class': 'form-control', 'placeholder': 'Username'}
+    )
+    password = PasswordField(
+        '新密碼', 
+        validators=[DataRequired(message='不能為空!'), 
+                    EqualTo('ConfirmPassword', message='您輸入的密碼不相同!')], 
+        render_kw={'class': 'form-control', 'placeholder': 'Username'}
+    )
+    ConfirmPassword = PasswordField(
+        '再次輸入新密碼',
+        validators=[DataRequired(message='不能為空!')],
+        render_kw={'class': 'form-control', 'placeholder': 'Username'}
+    )
+    submit = SubmitField(
+        'Submit',
         render_kw={'class': 'btn btn-lg btn-primary btn-block'}
     )
