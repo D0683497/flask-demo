@@ -7,7 +7,17 @@
 
 {% block content %}
 <form class="form-login" method="POST">
-    {% for message in get_flashed_messages() %}
+
+    {% for message in get_flashed_messages(category_filter=["success"]) %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+
+    {% for message in get_flashed_messages(category_filter=["error"]) %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>{{ message }}</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -15,6 +25,7 @@
         </button>
     </div>
     {% endfor %}
+
     {{ form.hidden_tag() }}
     <div class="text-center mb-4">
         <h1 class="h3 mb-3 font-weight-normal">Login</h1>

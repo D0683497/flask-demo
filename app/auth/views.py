@@ -16,9 +16,9 @@ def login():
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
-                flash('登入成功')
+                flash('登入成功', 'success')
             return redirect(next)
-        flash('錯誤的帳號或密碼!')
+        flash('錯誤的帳號或密碼!', 'error')
     return render_template('auth/login.html', form=form)
 
 
@@ -36,6 +36,6 @@ def regist():
         user = User(email=form.Email.data, username=form.Username.data, password=form.Password.data)
         db.session.add(user)
         db.session.commit()
-        flash('註冊成功!')
+        flash('註冊成功!', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/regist.html', form=form)
