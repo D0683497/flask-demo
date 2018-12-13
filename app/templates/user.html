@@ -3,6 +3,14 @@
 {% block content %}
 
 <div class="container">
+    {% for message in get_flashed_messages(category_filter=["success"]) %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
     <div class="jumbotron d-flex flex-column">
         <h1 class="display-4">{{ user.username }}</h1>
 
@@ -11,15 +19,19 @@
         {% endif %}
 
         {% if user.about %}
-        <p class="lead">{{ user.about }}</p>
+        <p class="lead">About Me: {{ user.about }}</p>
         {% endif %}
-        
+
         {% if user.location %}
-        <hr class="my-4">
+        
+        <div>
+            <hr class="my-4">
+        </div>
+
         <p>Location: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a></p>
         {% endif %}
         <div class="d-inline-flex justify-content-end">
-            <a class="btn btn-outline-dark" href="#" role="button">編輯個人資料</a>
+            <a class="btn btn-outline-dark" href="{{ url_for('main.edit_profile') }}" role="button">編輯個人資料</a>
         </div>
     </div>
 </div>
