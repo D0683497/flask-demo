@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from . import db, login_manager
+from datetime import datetime
 
 
 class Permission:
@@ -72,6 +73,9 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
+    name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    about = db.Column(db.Text())
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -97,6 +101,10 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMIN)
+    
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
 
     def __repr__(self):
         return '<User %r>' % self.username
