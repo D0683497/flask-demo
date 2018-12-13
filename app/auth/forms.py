@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
 from wtforms import ValidationError
 from ..models import User
@@ -39,6 +39,9 @@ class RegistForm(FlaskForm):
                         render_kw={'class': 'form-control',
                                    'placeholder': 'Email address'}
                         )
+    name = StringField('Real name', 
+                        render_kw={'class': 'form-control', 'placeholder': 'Real name'}
+                        )
     Username = StringField(
         'Username',
         validators=[DataRequired(message='不能為空!'), validata_username],
@@ -55,6 +58,12 @@ class RegistForm(FlaskForm):
         validators=[DataRequired(message='不能為空!')],
         render_kw={'class': 'form-control', 'placeholder': 'Confirm Password'}
     )
+    about = TextAreaField('About me', 
+                            render_kw={'class': 'form-control', 'placeholder': 'About me'}
+                        )
+    location = StringField('Location', 
+                            render_kw={'class': 'form-control', 'placeholder': 'Location'}
+                        )
     regist = SubmitField(
         '註冊',
         render_kw={'class': 'btn btn-lg btn-primary btn-block'}

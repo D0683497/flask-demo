@@ -34,7 +34,11 @@ def regist():
     form = RegistForm()
     if form.validate_on_submit():
         user = User(email=form.Email.data,
-                    username=form.Username.data, password=form.Password.data)
+                    username=form.Username.data, 
+                    password=form.Password.data,
+                    name=form.name.data,
+                    about=form.about.data,
+                    location=form.location.data)
         db.session.add(user)
         db.session.commit()
         flash('註冊成功!', 'success')

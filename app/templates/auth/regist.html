@@ -24,6 +24,11 @@
     {% endfor %}
 
     <div class="form-label-group">
+        {{ form.name() }}
+        {{ form.name.label }}
+    </div>
+
+    <div class="form-label-group">
         {{ form.Username() }}
         {{ form.Username.label }}
     </div>
@@ -52,6 +57,15 @@
         {{ error }}
     </div>
     {% endfor %}
+
+    <div class="form-label-group">
+        {{ form.about() }}
+    </div>
+
+    <div class="form-label-group">
+        {{ form.location() }}
+        {{ form.location.label }}
+    </div>
 
     {{ form.regist() }}
     <p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
