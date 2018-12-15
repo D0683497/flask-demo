@@ -32,10 +32,10 @@
     {% endfor %}
 
     <div class="form-label-group">
-        {{ form.Username() }}
-        {{ form.Username.label }}
+        {{ form.username() }}
+        {{ form.username.label }}
     </div>
-    {% for error in form.Username.errors %}
+    {% for error in form.username.errors %}
     <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>
@@ -44,10 +44,10 @@
     </div>
 
     <div class="form-label-group">
-        {{ form.Password() }}
-        {{ form.Password.label }}
+        {{ form.password() }}
+        {{ form.password.label }}
     </div>
-    {% for error in form.Password.errors %}
+    {% for error in form.password.errors %}
     <div class="alert alert-danger" role="alert">
         {{ error }}
     </div>

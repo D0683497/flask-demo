@@ -9,8 +9,8 @@ from .forms import LoginForm, RegistForm, ChangePasswordForm
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.Username.data).first()
-        if user is not None and user.verify_password(form.Password.data):
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is not None and user.verify_password(form.password.data):
             login_user(user, form.rememberme.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
@@ -33,9 +33,9 @@ def logout():
 def regist():
     form = RegistForm()
     if form.validate_on_submit():
-        user = User(email=form.Email.data,
-                    username=form.Username.data, 
-                    password=form.Password.data,
+        user = User(email=form.email.data,
+                    username=form.username.data, 
+                    password=form.password.data,
                     name=form.name.data,
                     about=form.about.data,
                     location=form.location.data)

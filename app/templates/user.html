@@ -23,7 +23,7 @@
         {% endif %}
 
         {% if user.location %}
-        
+
         <div>
             <hr class="my-4">
         </div>
@@ -31,7 +31,15 @@
         <p>Location: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a></p>
         {% endif %}
         <div class="d-inline-flex justify-content-end">
-            <a class="btn btn-outline-dark" href="{{ url_for('main.edit_profile') }}" role="button">編輯個人資料</a>
+            <div class="btn-group-vertical">
+                {% if user == current_user %}
+                <a class="btn btn-outline-dark" href="{{ url_for('main.edit_profile') }}" role="button">編輯個人資料</a>
+                {% endif %}
+                {% if current_user.is_administrator() %}
+                <a class="btn btn-outline-dark" href="{{ url_for('main.edit_profile_admin', id=user.id) }}" role="button">管理員
+                    - 編輯資料</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

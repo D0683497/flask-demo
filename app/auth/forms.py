@@ -6,12 +6,12 @@ from ..models import User
 
 
 class LoginForm(FlaskForm):
-    Username = StringField(
+    username = StringField(
         'Username',
         validators=[DataRequired(message='不能為空!'), ],
         render_kw={'class': 'form-control', 'placeholder': 'Username'}
     )
-    Password = PasswordField(
+    password = PasswordField(
         'Password',
         validators=[DataRequired(message='不能為空!')],
         render_kw={'class': 'form-control', 'placeholder': 'Password'}
@@ -33,7 +33,7 @@ class RegistForm(FlaskForm):
     def validata_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('使用者已被註冊')
-    Email = StringField('Email address',
+    email = StringField('Email address',
                         validators=[DataRequired(
                             message='不能為空!'), Email(message='格式錯誤!'), validata_email],
                         render_kw={'class': 'form-control',
@@ -42,18 +42,18 @@ class RegistForm(FlaskForm):
     name = StringField('Real name', 
                         render_kw={'class': 'form-control', 'placeholder': 'Real name'}
                         )
-    Username = StringField(
+    username = StringField(
         'Username',
         validators=[DataRequired(message='不能為空!'), validata_username],
         render_kw={'class': 'form-control', 'placeholder': 'Username'}
     )
-    Password = PasswordField(
+    password = PasswordField(
         'Password',
         validators=[DataRequired(message='不能為空!'), 
-                    EqualTo('ConfirmPassword', message='您輸入的密碼不相同!')],
+                    EqualTo('confirmPassword', message='您輸入的密碼不相同!')],
         render_kw={'class': 'form-control', 'placeholder': 'Password'}
     )
-    ConfirmPassword = PasswordField(
+    confirmPassword = PasswordField(
         'Confirm Password',
         validators=[DataRequired(message='不能為空!')],
         render_kw={'class': 'form-control', 'placeholder': 'Confirm Password'}
