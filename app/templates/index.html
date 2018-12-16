@@ -27,5 +27,26 @@
             <p class="lead mb-0"><a href="{{ url_for('auth.regist') }}" class="text-white font-weight-bold">立即註冊</a></p>
         </div>
     </div>
+    <form class="form-regist" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.body.label }}
+            {{ form.body() }}
+        </div>
+
+        {{ form.submit() }}
+    </form>
+
+    {% for post in posts %}
+    <div class="card">
+        <div class="card-header">
+            <a href="{{ url_for('main.user', username=post.author.username) }}">{{ post.author.username }}</a>
+        </div>
+        <div class="card-body">
+            {{ post.body }}
+        </div>
+    </div>
+    {% endfor %}
 </div>
+
 {% endblock %}

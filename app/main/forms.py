@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, SelectField, BooleanField
 from wtforms.validators import DataRequired, Email
+from wtforms import ValidationError
 from ..models import Role, User
 
 
@@ -50,3 +51,10 @@ class EditProfileAdminForm(FlaskForm):
     def validate_username(self, field):
         if field.data != self.user.username and User.query.filter_by(username=field.data).first():
             raise ValidationError('Username 已被使用')
+
+class PostForm(FlaskForm):
+    body = TextAreaField("分享您的文章", 
+                        validators=[DataRequired()],
+                        render_kw={'class': 'form-control', 'placeholder': '分享您的文章'}
+                        )
+    submit = SubmitField('Submit', render_kw={'class': 'btn btn-lg btn-primary btn-block'})
