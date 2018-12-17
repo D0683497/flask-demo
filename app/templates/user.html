@@ -11,8 +11,24 @@
         </button>
     </div>
     {% endfor %}
+    {% for message in get_flashed_messages(category_filter=["warning"]) %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
     <div class="jumbotron d-flex flex-column">
         <h1 class="display-4">{{ user.username }}</h1>
+
+        {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+            {% if not current_user.is_following(user) %}
+            <a class="btn btn-outline-dark" href="{{ url_for('main.follow', username=user.username) }}" role="button">Follow</a>
+            {% else %}
+            <a class="btn btn-outline-dark" href="{{ url_for('main.unfollow', username=user.username) }}" role="button">取消Follow</a>
+            {% endif %}
+        {% endif %}
 
         {% if user.email %}
         <p class="lead">E-mail: <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
@@ -30,6 +46,7 @@
 
         <p>Location: <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a></p>
         {% endif %}
+
         <div class="d-inline-flex justify-content-end">
             <div class="btn-group-vertical">
                 {% if user == current_user %}

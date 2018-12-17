@@ -1,10 +1,11 @@
-from flask import render_template, abort, flash, redirect, url_for
+from flask import render_template, abort, flash, redirect, url_for, current_app, request
 from . import main
 from .. import db
-from ..models import User, Role, Post, Permission
+from ..models import User, Role, Post, Permission, Post
 from flask_login import login_required, current_user
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm
-from ..decorators import admin_required
+from ..decorators import admin_required, permission_required
+
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -19,10 +20,12 @@ def index():
     posts = Post.query.order_by(Post.id).all()
     return render_template('index.html', form=form, posts=posts)
 
+
 @main.route('/user/<username>')
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
+
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -40,6 +43,7 @@ def edit_profile():
     form.location.data = current_user.location
     form.about.data = current_user.about
     return render_template('edit_profile.html', form=form)
+
 
 @main.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -60,9 +64,81 @@ def edit_profile_admin(id):
         return redirect(url_for('main.user', username=user.username))
     form.email.data = user.email
     form.username.data = user.username
-    #form.confirmed.data = user.confirmed
     form.role.data = user.role_id
     form.name.data = user.name
     form.location.data = user.location
     form.about.data = user.about
     return render_template('edit_profile_admin.html', form=form, user=user)
+
+
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', posts=[post])
+
+
+@main.route('/follow/<username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def follow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('查無此人', 'warning')
+        return redirect(url_for('main.index'))
+    if current_user.is_following(user):
+        flash('您已經 follow 他', 'warning')
+        return redirect(url_for('main.user', username=username))
+    current_user.follow(user)
+    db.session.commit()
+    flash('成功 follow %s' % username, 'success')
+    return redirect(url_for('main.user', username=username))
+
+
+@main.route('/unfollow/<username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def unfollow(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('查無使用者', 'warning')
+        return redirect(url_for('main.index'))
+    if not current_user.is_following(user):
+        flash('您尚未 follow 他', 'warning')
+        return redirect(url_for('main.user', username=username))
+    current_user.unfollow(user)
+    db.session.commit()
+    flash('您成功取消 follow %s' % username, 'success')
+    return redirect(url_for('main.user', username=username))
+
+@main.route('/followers/<username>')
+def followers(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('查無使用者', 'warning')
+        return redirect(url_for('main.index'))
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followers.paginate(
+        page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+        error_out=False)
+    follows = [{'user': item.follower, 'timestamp': item.timestamp}
+               for item in pagination.items]
+    return render_template('followers.html', user=user, title="Followers of",
+                           endpoint='.followers', pagination=pagination,
+                           follows=follows)
+
+
+@main.route('/followed-by/<username>')
+def followed_by(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('查無使用者', 'warning')
+        return redirect(url_for('main.index'))
+    page = request.args.get('page', 1, type=int)
+    pagination = user.followed.paginate(
+        page, per_page=current_app.config['FLASKY_FOLLOWERS_PER_PAGE'],
+        error_out=False)
+    follows = [{'user': item.followed, 'timestamp': item.timestamp}
+               for item in pagination.items]
+    return render_template('followers.html', user=user, title="Followed by",
+                           endpoint='.followed_by', pagination=pagination,
+                           follows=follows)
