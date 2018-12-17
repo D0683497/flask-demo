@@ -13,7 +13,9 @@
         </div>
         <div class="card-body">
             {{ post.body }}
+            {% if current_user == post.author %}
             <a href="{{ url_for('.edit', id=post.id) }}" class="btn btn-primary">編輯</a>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
