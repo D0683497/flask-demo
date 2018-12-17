@@ -15,10 +15,22 @@ def index():
                     author=current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
-        print('修改成功')
         return redirect(url_for('main.index'))
-    posts = Post.query.order_by(Post.id).all()
-    return render_template('index.html', form=form, posts=posts)
+    page = request.args.get('page', 1, type=int)
+    show_followed = False
+    if current_user.is_authenticated:
+        show_followed = bool(request.cookies.get('show_followed', ''))
+    if show_followed:
+        query = current_user.followed_posts
+    else:
+        query = Post.query
+
+    pagination = query.order_by(Post.id).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+    return render_template('index.html', form=form, posts=posts,
+                           show_followed=show_followed, pagination=pagination)
 
 
 @main.route('/user/<username>')
@@ -109,6 +121,7 @@ def unfollow(username):
     db.session.commit()
     flash('您成功取消 follow %s' % username, 'success')
     return redirect(url_for('main.user', username=username))
+
 
 @main.route('/followers/<username>')
 def followers(username):

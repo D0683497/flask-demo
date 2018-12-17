@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% import "post_pagination.html" as macros %}
+
 {% block content %}
 <div class="container">
     {% for message in get_flashed_messages(category_filter=["success"]) %}
@@ -27,6 +29,7 @@
             <p class="lead mb-0"><a href="{{ url_for('auth.regist') }}" class="text-white font-weight-bold">立即註冊</a></p>
         </div>
     </div>
+
     <form class="form-regist" method="POST">
         {{ form.hidden_tag() }}
         <div class="form-group">
@@ -47,6 +50,12 @@
         </div>
     </div>
     {% endfor %}
+
+    {% if pagination %}
+    <nav aria-label="Page navigation">
+        {{ macros.pagination_widget(pagination, 'main.index') }}
+    </nav>
+    {% endif %}
 </div>
 
 {% endblock %}
