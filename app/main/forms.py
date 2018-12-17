@@ -58,3 +58,10 @@ class PostForm(FlaskForm):
                         render_kw={'class': 'form-control', 'placeholder': '分享您的文章'}
                         )
     submit = SubmitField('Submit', render_kw={'class': 'btn btn-lg btn-primary btn-block'})
+
+class CommentForm(FlaskForm):
+    body = StringField('寫下您的評論', 
+                        validators=[DataRequired()],
+                        render_kw={'class': 'form-control', 'placeholder': '分享您的文章'}
+                        )
+    submit = SubmitField('Submit', render_kw={'class': 'btn btn-lg btn-primary btn-block'})

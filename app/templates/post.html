@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% import "pagination.html" as macros %}
+
 {% block content %}
 
 <div class="container">
@@ -15,6 +17,38 @@
         </div>
     </div>
     {% endfor %}
+
+    {% if current_user.can(Permission.COMMENT) %}
+    <form class="form" method="POST">
+        {{ form.hidden_tag() }}
+        <h1 class="h3 mb-3 font-weight-normal">評論</h1>
+
+        <div class="form-label-group">
+            {{ form.body() }}
+        </div>
+
+        {{ form.submit() }}
+    </form>
+    {% endif %}
+
+    {% for comment in comments %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{{ url_for('.user', username=comment.author.username) }}">{{comment.author.username }}</a>
+            </h5>
+            <p class="card-text">
+                {{ comment.body }}
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if pagination %}
+    <nav aria-label="Page navigation">
+        {{ macros.pagination_widget(pagination, 'main.post', fragment='#comments', id=posts[0].id) }}
+    </nav>
+    {% endif %}
 
 </div>
 {% endblock %}

@@ -86,10 +86,17 @@ class User(UserMixin, db.Model):
     location = db.Column(db.String(64))
     about = db.Column(db.Text())
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    followed = db.relationship('Follow', foreign_keys=[Follow.follower_id], backref=db.backref(
-        'follower', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
-    followers = db.relationship('Follow', foreign_keys=[Follow.followed_id], backref=db.backref(
-        'followed', lazy='joined'), lazy='dynamic', cascade='all, delete-orphan')
+    followed = db.relationship('Follow', 
+                                foreign_keys=[Follow.follower_id], 
+                                backref=db.backref('follower', lazy='joined'), 
+                                lazy='dynamic', cascade='all, delete-orphan'
+                                )
+    followers = db.relationship('Follow', 
+                                foreign_keys=[Follow.followed_id], 
+                                backref=db.backref('followed', lazy='joined'), 
+                                lazy='dynamic', cascade='all, delete-orphan'
+                                )
+    comments = db.relationship('Comment', backref='author', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -98,7 +105,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(name='Administrator').first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-        #self.follow(self)
+        # self.follow(self)
 
     @property
     def password(self):
@@ -167,3 +174,13 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    comments = db.relationship('Comment', backref='post', lazy='dynamic')
+
+
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    disabled = db.Column(db.Boolean)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))

@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 
-{% import "post_pagination.html" as macros %}
-
 {% block content %}
 <div class="container">
     {% for message in get_flashed_messages(category_filter=["success"]) %}
