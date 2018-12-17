@@ -1,4 +1,4 @@
-from flask import render_template, abort, flash, redirect, url_for, current_app, request
+from flask import render_template, abort, flash, redirect, url_for, current_app, request, make_response
 from . import main
 from .. import db
 from ..models import User, Role, Post, Permission, Post
@@ -19,7 +19,7 @@ def index():
     page = request.args.get('page', 1, type=int)
     show_followed = False
     if current_user.is_authenticated:
-        show_followed = bool(request.cookies.get('show_followed', ''))
+        show_followed = bool(request.cookies.get('show_followed_post', ''))
     if show_followed:
         query = current_user.followed_posts
     else:
@@ -155,3 +155,19 @@ def followed_by(username):
     return render_template('followers.html', user=user, title="Followed by",
                            endpoint='.followed_by', pagination=pagination,
                            follows=follows)
+
+
+@main.route('/post_all')
+@login_required
+def show_all():
+    resp = make_response(redirect(url_for('.index')))
+    resp.set_cookie('show_followed_post', '', max_age=30*24*60*60)
+    return resp
+
+
+@main.route('/post_followed')
+@login_required
+def show_followed():
+    resp = make_response(redirect(url_for('.index')))
+    resp.set_cookie('show_followed_post', '1', max_age=30*24*60*60)
+    return resp
