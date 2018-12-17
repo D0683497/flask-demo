@@ -16,21 +16,7 @@ def index():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.index'))
-    page = request.args.get('page', 1, type=int)
-    show_followed = False
-    if current_user.is_authenticated:
-        show_followed = bool(request.cookies.get('show_followed_post', ''))
-    if show_followed:
-        query = current_user.followed_posts
-    else:
-        query = Post.query
-
-    pagination = query.order_by(Post.id).paginate(
-        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
-        error_out=False)
-    posts = pagination.items
-    return render_template('index.html', form=form, posts=posts,
-                           show_followed=show_followed, pagination=pagination)
+    return render_template('index.html', form=form)
 
 
 @main.route('/user/<username>')
@@ -87,6 +73,44 @@ def edit_profile_admin(id):
 def post(id):
     post = Post.query.get_or_404(id)
     return render_template('post.html', posts=[post])
+
+
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and \
+            not current_user.can(Permission.ADMIN):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.body = form.body.data
+        db.session.add(post)
+        db.session.commit()
+        flash('The post has been updated.')
+        return redirect(url_for('.post', id=post.id))
+    form.body.data = post.body
+    return render_template('edit_post.html', form=form)
+
+
+@main.route('/post')
+@login_required
+def post_all():
+    page = request.args.get('page', 1, type=int)
+    show_followed = False
+    if current_user.is_authenticated:
+        show_followed = bool(request.cookies.get('show_followed_post', ''))
+    if show_followed:
+        query = current_user.followed_posts
+    else:
+        query = Post.query
+
+    pagination = query.order_by(Post.id).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+    return render_template('post_all.html', posts=posts,
+                           show_followed=show_followed, pagination=pagination)
 
 
 @main.route('/follow/<username>')
@@ -160,7 +184,7 @@ def followed_by(username):
 @main.route('/post_all')
 @login_required
 def show_all():
-    resp = make_response(redirect(url_for('.index')))
+    resp = make_response(redirect(url_for('main.post_all')))
     resp.set_cookie('show_followed_post', '', max_age=30*24*60*60)
     return resp
 
@@ -168,6 +192,6 @@ def show_all():
 @main.route('/post_followed')
 @login_required
 def show_followed():
-    resp = make_response(redirect(url_for('.index')))
+    resp = make_response(redirect(url_for('main.post_all')))
     resp.set_cookie('show_followed_post', '1', max_age=30*24*60*60)
     return resp

@@ -39,38 +39,6 @@
 
         {{ form.submit() }}
     </form>
-
-    <div class="post-tabs">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a href="{{ url_for('main.show_all') }}" {% if not show_followed %} class="active nav-link" {% else %} class="nav-link" {% endif %}>All</a>
-            </li>
-            {% if current_user.is_authenticated %}
-            <li class="nav-item">
-                <a href="{{ url_for('main.show_followed') }}" {% if show_followed %} class="active nav-link" {% else %} class="nav-link" {% endif %}>Followers</a>
-            </li>
-            {% endif %}
-        </ul>
-
-        {% for post in posts %}
-        <div class="card">
-            <div class="card-header">
-                <a href="{{ url_for('main.user', username=post.author.username) }}">{{ post.author.username }}</a>
-            </div>
-            <div class="card-body">
-                {{ post.body }}
-            </div>
-        </div>
-        {% endfor %}
-
-    </div>
-
-    {% if pagination %}
-    <nav aria-label="Page navigation">
-        {{ macros.pagination_widget(pagination, 'main.index') }}
-    </nav>
-    {% endif %}
-
 </div>
 
 {% endblock %}

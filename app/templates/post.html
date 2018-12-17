@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
 <div class="container">
+
     {% for post in posts %}
     <div class="card">
         <div class="card-header">
@@ -9,8 +11,10 @@
         </div>
         <div class="card-body">
             {{ post.body }}
+            <a href="{{ url_for('.edit', id=post.id) }}" class="btn btn-primary">編輯</a>
         </div>
     </div>
     {% endfor %}
+
 </div>
 {% endblock %}

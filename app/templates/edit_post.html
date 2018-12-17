@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+{% endblock %}
+
+{% block content %}
+<form class="form-login" method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="text-center mb-4">
+        <h1 class="h3 mb-3 font-weight-normal">編輯文章</h1>
+    </div>
+
+    {% for message in get_flashed_messages(category_filter=["success"]) %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+
+    {% for message in get_flashed_messages(category_filter=["error"]) %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+
+    <div class="form-label-group">
+        {{ form.body() }}
+    </div>
+
+    </div>
+
+    {{ form.submit() }}
+    <p class="mt-5 mb-3 text-muted text-center">&copy; 2018</p>
+</form>
+{% endblock %}
