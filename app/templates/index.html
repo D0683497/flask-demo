@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+
 {% block content %}
 <div class="container">
     {% for message in get_flashed_messages(category_filter=["success"]) %}
@@ -28,15 +29,16 @@
         </div>
     </div>
 
-    <form class="form-regist" method="POST">
+    <form class="form" method="POST">
         {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.body.label }}
-            {{ form.body() }}
-        </div>
 
+
+        <div class="form-label-group">
+            {{ form.body(class="form-control", id="formControlTextarea", rows="3") }}
+        </div>
         {{ form.submit() }}
     </form>
+
 </div>
 
 {% endblock %}

@@ -23,7 +23,7 @@ class EditProfileAdminForm(FlaskForm):
                             )
     role = SelectField('Role', 
                         coerce=int,
-                        render_kw={'class': 'form-control', 'placeholder': 'Role'}
+                        render_kw={'class': 'form-control', 'id': 'inputGroupSelect', 'placeholder': 'Role'}
                         )
     name = StringField('Real name',
                         render_kw={'class': 'form-control', 'placeholder': 'Real name'}

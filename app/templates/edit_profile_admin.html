@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<form class="form-regist" method="POST">
+<form class="form-edit_profile" method="POST">
     {{ form.hidden_tag() }}
 
     <div class="text-center mb-4">
@@ -23,8 +23,10 @@
         {{ form.username.label }}
     </div>
 
-    {{ form.role.label }}
-    <div class="form-label-group">
+    <div class="form-label-group input-group">
+        <div class="input-group-prepend">
+            {{ form.role.label(class="input-group-text", for="inputGroupSelect") }}
+        </div>
         {{ form.role() }}
     </div>
 
