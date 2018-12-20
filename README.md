@@ -8,6 +8,8 @@
 
 + 創建虛擬環境(python3)
     + `pyvenv venv`
++ 啟動虛擬環境
+    + `source venv/bin/activate`
 + Install dependencies
     + `pip install -r requirements.txt`
 + Configuration
@@ -47,7 +49,6 @@
 ## TODO
 
 + 使用者修改  E-mail 功能
-+ 文章頁面 User 部分(只顯示自己的文章)
 + 大頭貼
 + 發文可上傳圖片
 + 完善各頁面的 flash 功能
