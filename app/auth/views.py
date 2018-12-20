@@ -56,7 +56,7 @@ def change_password():
             db.session.commit()
             logout_user()
             flash('密碼更改成功，請重新登入', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('auth.login'))
         else:
             flash('密碼輸入錯誤', 'error')
     return render_template("auth/change_password.html", form=form)
