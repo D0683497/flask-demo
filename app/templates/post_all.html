@@ -7,43 +7,45 @@
     <div class="post-tabs">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a href="{{ url_for('main.show_all') }}" {% if not show_followed %} class="active nav-link" {% else %}
-                    class="nav-link" {% endif %}>All</a>
+                <a href="{{ url_for('main.show_all') }}" {% if not show_followed and not show_user %} class="active nav-link"
+                    {% else %} class="nav-link" {% endif %}>All</a>
             </li>
-            {% if current_user.is_authenticated %}
             <li class="nav-item">
                 <a href="{{ url_for('main.show_followed') }}" {% if show_followed %} class="active nav-link" {% else %}
                     class="nav-link" {% endif %}>Followers</a>
             </li>
-            {% endif %}
+            <li class="nav-item">
+                <a href="{{ url_for('main.post_user') }}" {% if show_user %} class="active nav-link" {% else %} class="nav-link"
+                    {% endif %}>User</a>
+            </li>
         </ul>
 
-        {% for post in posts %}
-        <div class="card">
-            <div class="card-header">
-                <a href="{{ url_for('main.user', username=post.author.username) }}">{{ post.author.username }}</a>
+        {% if posts %}
+            {% for post in posts %}
+            <div class="card">
+                <div class="card-header">
+                    <a href="{{ url_for('main.user', username=post.author.username) }}">{{ post.author.username }}</a>
+                </div>
+                <div class="card-body">
+                    {{ post.body }}
+                    <a href="{{ url_for('main.post', id=post.id) }}" class="btn btn-primary">view</a>
+                </div>
             </div>
-            <div class="card-body">
-                {{ post.body }}
-                <a href="{{ url_for('main.post', id=post.id) }}" class="btn btn-primary">view</a>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-dark" role="alert">
+                <h4 class="alert-heading">尚無文章</h4>
+                <hr>
+                <a href="{{ url_for('main.index') }}" class="alert-link">趕緊去分享一篇吧</a>
             </div>
-        </div>
-        {% endfor %}
+        {% endif %}
 
     </div>
 
-    {% if post %}
-        {% if pagination %}
-        <nav aria-label="Page navigation">
-            {{ macros.pagination_widget(pagination, 'main.post_all') }}
-        </nav>
-        {% endif %}
-    {% else %}
-        <div class="alert alert-dark" role="alert">
-            <h4 class="alert-heading">尚無文章</h4>
-            <hr>
-            <a href="{{ url_for('main.index') }}" class="alert-link">趕緊去分享一篇吧</a>
-        </div>
+    {% if pagination %}
+    <nav aria-label="Page navigation">
+        {{ macros.pagination_widget(pagination, 'main.post_all') }}
+    </nav>
     {% endif %}
 
 </div>

@@ -130,6 +130,18 @@ def post_all():
     return render_template('post_all.html', posts=posts,
                            show_followed=show_followed, pagination=pagination)
 
+@main.route('/post_user')
+@login_required
+def post_user():
+    page = request.args.get('page', 1, type=int)
+    show_user = True
+    query = Post.query.filter_by(author_id=current_user.id)
+    pagination = query.order_by(Post.id).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+    return render_template('post_all.html', posts=posts,
+                           show_user=show_user, pagination=pagination)
 
 @main.route('/follow/<username>')
 @login_required
@@ -213,4 +225,3 @@ def show_followed():
     resp = make_response(redirect(url_for('main.post_all')))
     resp.set_cookie('show_followed_post', '1', max_age=30*24*60*60)
     return resp
-
