@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% import "pagination.html" as macros %}
+
+{% block content %}
+<div class="container">
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>User</th>
+            </tr>
+        </thead>
+        {% for member in users %}
+        {% if member != user %}
+        <tr>
+            <td>
+                <a href="{{ url_for('.user', username = member.username) }}">
+                    {{ member.username }}
+                </a>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+
+</div>
+{% endblock %}

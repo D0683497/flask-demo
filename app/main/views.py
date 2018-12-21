@@ -225,3 +225,11 @@ def show_followed():
     resp = make_response(redirect(url_for('main.post_all')))
     resp.set_cookie('show_followed_post', '1', max_age=30*24*60*60)
     return resp
+
+@main.route('/all_user/<username>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def all_user(username):
+    user = User.query.filter_by(username=username).first()
+    users = User.query.all()
+    return render_template('all_user.html', user=user, users=users)
