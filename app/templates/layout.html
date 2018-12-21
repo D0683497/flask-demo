@@ -37,9 +37,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.post_all') }}">文章</a>
                 </li>
+                {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('main.all_user', username=current_user.username) }}">查看其他用戶</a>
                 </li>
+                {% endif %}
             </ul>
             {% if current_user.is_authenticated %}
 
