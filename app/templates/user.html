@@ -19,7 +19,7 @@
         </button>
     </div>
     {% endfor %}
-    <div class="jumbotron d-flex flex-column">
+    <div class="jumbotron flex-column">
         <h1 class="display-4">{{ user.username }}</h1>
 
         {% if current_user.can(Permission.FOLLOW) and user != current_user %}
@@ -29,6 +29,13 @@
             <a class="btn btn-outline-dark" href="{{ url_for('main.unfollow', username=user.username) }}" role="button">取消Follow</a>
             {% endif %}
         {% endif %}
+
+        <a href="{{ url_for('.followers', username=user.username) }}">
+            追蹤他的人: <span class="badge badge-pill badge-secondary">{{ user.followers.count() }}</span>
+        </a>
+        <a href="{{ url_for('.followed_by', username=user.username) }}">
+            追蹤人數: <span class="badge badge-pill badge-secondary">{{ user.followed.count() }}</span>
+        </a>
 
         {% if user.name %}
         <p class="lead">Real Name: {{ user.name }}</p>
