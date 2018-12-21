@@ -30,6 +30,10 @@
             {% endif %}
         {% endif %}
 
+        {% if user.name %}
+        <p class="lead">Real Name: {{ user.name }}</p>
+        {% endif %}
+
         {% if user.email %}
         <p class="lead">E-mail: <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
         {% endif %}
