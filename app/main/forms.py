@@ -57,7 +57,7 @@ class EditProfileAdminForm(FlaskForm):
 
 class PostForm(FlaskForm):
     body = TextAreaField("分享您的文章", 
-                        validators=[DataRequired()],
+                        validators=[DataRequired(message='不能為空!')],
                         render_kw={'class': 'form-control', 'placeholder': '分享您的文章'}
                         )
     photo = FileField("Choose file", validators=[FileAllowed(['jpg', 'png'], '只能是圖片!')], render_kw={'class': 'custom-file-input', 'id': 'customFile'})

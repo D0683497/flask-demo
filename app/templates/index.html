@@ -38,11 +38,28 @@
         <div class="form-label-group">
             {{ form.body(class="form-control", id="formControlTextarea", rows="3") }}
         </div>
+        {% for error in form.body.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ error }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+
         <div class="custom-file">
             {{ form.photo() }}
             {{ form.photo.label(class="custom-file-label", for="customFile") }}
             <input type="file" class="custom-file-input" id="customFile">
         </div>
+        {% for error in form.photo.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>{{ error }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
         {{ form.submit() }}
     </form>
     {% endif %}
