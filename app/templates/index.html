@@ -32,12 +32,16 @@
         </div>
     </div>
     {% if current_user.is_authenticated %}
-    <form class="form" method="POST">
+    <form class="form" method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-
 
         <div class="form-label-group">
             {{ form.body(class="form-control", id="formControlTextarea", rows="3") }}
+        </div>
+        <div class="custom-file">
+            {{ form.photo() }}
+            {{ form.photo.label(class="custom-file-label", for="customFile") }}
+            <input type="file" class="custom-file-input" id="customFile">
         </div>
         {{ form.submit() }}
     </form>

@@ -9,6 +9,8 @@ class Config:
     FLASKY_POSTS_PER_PAGE = 5
     FLASKY_COMMENTS_PER_PAGE = 5
     FLASKY_FOLLOWERS_PER_PAGE = 10
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+    UPLOAD_FOLDER = basedir + '/app/static/'
 
     @staticmethod
     def init_app(app):

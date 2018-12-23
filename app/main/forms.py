@@ -4,6 +4,9 @@ from wtforms.validators import DataRequired, Email
 from wtforms import ValidationError
 from ..models import Role, User
 
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+
 
 class EditProfileForm(FlaskForm):
     name = StringField('Real name', render_kw={'class': 'form-control'})
@@ -57,6 +60,7 @@ class PostForm(FlaskForm):
                         validators=[DataRequired()],
                         render_kw={'class': 'form-control', 'placeholder': '分享您的文章'}
                         )
+    photo = FileField("Choose file", validators=[FileAllowed(['jpg', 'png'], '只能是圖片!')], render_kw={'class': 'custom-file-input', 'id': 'customFile'})
     submit = SubmitField('Submit', render_kw={'class': 'btn btn-lg btn-primary btn-block'})
 
 class CommentForm(FlaskForm):

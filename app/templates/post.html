@@ -8,7 +8,11 @@
 
     {% for post in posts %}
     <div class="card flex-md-row mb-4 box-shadow h-md-250">
+        {% if post.photo %}
+        <img class="card-img-left flex-auto d-none d-lg-block" height="200x" src="{{ url_for('static', filename='photos/'+post.photo)  }}" alt="Card image cap">
+        {% else %}
         <img class="card-img-left flex-auto d-none d-lg-block" src="{{ post.author.gravatar(size=200) }}" alt="Card image cap">
+        {% endif %}
         <div class="card-body d-flex flex-column align-items-start">
             <strong class="d-inline-block mb-2 text-primary">
                 <a href="{{ url_for('main.post', id=post.id) }}">{{ post.author.username }}</a>

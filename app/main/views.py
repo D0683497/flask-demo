@@ -5,16 +5,25 @@ from ..models import User, Role, Post, Permission, Post, Comment
 from flask_login import login_required, current_user
 from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
 from ..decorators import admin_required, permission_required
+import os
+from werkzeug.utils import secure_filename
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
     form = PostForm()
     if current_user.can(Permission.WRITE) and form.validate_on_submit():
-        post = Post(body=form.body.data,
-                    author=current_user._get_current_object())
+
+        file = form.photo.data
+        if file is not None:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'],'photos', filename))
+            post = Post(body=form.body.data, photo=filename, author=current_user._get_current_object())
+        else:
+            post = Post(body=form.body.data, author=current_user._get_current_object())
         db.session.add(post)
         db.session.commit()
+        flash('已成功送出', 'success')
         return redirect(url_for('main.index'))
     return render_template('index.html', form=form)
 
