@@ -51,12 +51,15 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">
-                <a href="{{ url_for('.user', username=comment.author.username) }}">{{comment.author.username }}</a>
+                <a href="{{ url_for('main.user', username=comment.author.username) }}">{{comment.author.username }}</a>
             </h5>
             <p class="card-text">
                 {{ comment.body }}
             </p>
         </div>
+        {% if current_user == comment.author %}
+        <a class="btn btn-outline-danger btn-block" href="{{ url_for('main.del_com', id=comment.id) }}">刪除</a>
+        {% endif %}
     </div>
     {% endfor %}
 
